@@ -1,175 +1,114 @@
 package com.ebl.faster
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.Gravity
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
-import dev1503.oreuiforandroid.R
 import dev1503.oreui.StyleSheet
 import dev1503.oreui.widgets.OreButton
-import dev1503.oreui.widgets.OreCard
 import dev1503.oreui.widgets.OrePanel
+import dev1503.oreui.widgets.OreTabs
+import com.ebl.faster.ui.pages.HomePage
+import com.ebl.faster.ui.pages.SettingsPage
+import com.ebl.faster.ui.pages.AccountPage
 
 class MainActivity : AppCompatActivity() {
+    
+    private lateinit var contentFrame: FrameLayout
+    
+    // 缓存页面实例，避免频繁重建
+    private val homePage by lazy { HomePage(this) }
+    private val settingsPage by lazy { SettingsPage(this) }
+    private val accountPage by lazy { AccountPage(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. 根容器：纯黑背景，可滚动
-        val scrollView = ScrollView(this).apply {
+        // 根容器：深色背景，铺满屏幕，禁止自身滚动，因为子页面各自有 ScrollView
+        val rootLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(0xFF000000.toInt())
+            setBackgroundColor(0xFF1E1E1F.toInt())
         }
 
-        val rootLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-
-        // --- 2. 标题栏 ---
+        // --- 1. 标题栏 (灰偏白风格) ---
         val titleBar = OrePanel(this).apply {
-            styleSheet = StyleSheet.STYLE_PANEL
+            styleSheet = StyleSheet.STYLE_WHITE
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(20, 20, 20, 20)
-            }
+            )
         }
 
         val titleText = TextView(this).apply {
-            text = "EBC"
-            setTextColor(0xFFFFFFFF.toInt())
+            text = "EBLauncher"
+            setTextColor(0xFF000000.toInt())
             textSize = 20f
+            paint.isFakeBoldText = true
             gravity = Gravity.CENTER
-            setPadding(0, 10, 0, 10)
+            setPadding(0, 25, 0, 25)
         }
         titleBar.addView(titleText)
-
-        // --- 3. Banner 海报图 ---
-        val bannerImage = ImageView(this).apply {
-            // 使用项目自带的 bg.jpg 作为示例海报
-            setImageResource(R.drawable.bg) 
-            scaleType = ImageView.ScaleType.CENTER_CROP
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (200 * resources.displayMetrics.density).toInt() // 约 200dp 高度
-            ).apply {
-                setMargins(20, 0, 20, 20)
-            }
-        }
-
-        // --- 4. 大尺寸绿色启动按钮 ---
-        val launchButton = OreButton(this).apply {
-            text = "启动"
-            styleSheet = StyleSheet.STYLE_GREEN
-            
-            // 确保高度至少 67dp
-            val minHeightPx = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 67f, resources.displayMetrics
-            ).toInt()
-            
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                minHeightPx
-            ).apply {
-                setMargins(40, 20, 40, 40)
-            }
-        }
-
-        // --- 5. 设置与资讯区域 ---
-        val contentArea = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(20, 0, 20, 50)
-            }
-        }
-
-        // 设置区域
-        val settingsCard = OreCard(this).apply {
-            styleSheet = StyleSheet.STYLE_CARD_DARK
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 10, 0, 10)
-            }
-        }
-        
-        val settingsText = TextView(this).apply {
-            text = "设置"
-            setTextColor(0xFFFFFFFF.toInt())
-            textSize = 16f
-            setPadding(20, 20, 20, 20)
-        }
-        settingsCard.addView(settingsText)
-
-        // 社区活动区域
-        val communityCard = OreCard(this).apply {
-            styleSheet = StyleSheet.STYLE_CARD_DARK
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 10, 0, 10)
-            }
-        }
-        
-        val communityText = TextView(this).apply {
-            text = "社区活动\n- New Map Contest\n- Weekly Build Challenge"
-            setTextColor(0xFFB1B2B5.toInt())
-            textSize = 14f
-            setPadding(20, 20, 20, 20)
-        }
-        communityCard.addView(communityText)
-
-        // 新闻资讯区域
-        val newsCard = OreCard(this).apply {
-            styleSheet = StyleSheet.STYLE_CARD_DARK
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 10, 0, 10)
-            }
-        }
-        
-        val newsText = TextView(this).apply {
-            text = "新闻资讯\n- Version 1.21.0 is now available!"
-            setTextColor(0xFFB1B2B5.toInt())
-            textSize = 14f
-            setPadding(20, 20, 20, 20)
-        }
-        newsCard.addView(newsText)
-
-        contentArea.addView(settingsCard)
-        contentArea.addView(communityCard)
-        contentArea.addView(newsCard)
-
-        // 组装所有组件
         rootLayout.addView(titleBar)
-        rootLayout.addView(bannerImage)
-        rootLayout.addView(launchButton)
-        rootLayout.addView(contentArea)
 
-        scrollView.addView(rootLayout)
-        setContentView(scrollView)
+        // --- 2. 顶部导航栏 (OreTabs) ---
+        val tabsContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(20, 20, 20, 0)
+            }
+        }
+        
+        val topTabs = OreTabs(this).apply {
+            // 添加页面导航按钮
+            addButton(OreButton(context).apply { text = "主页" })
+            addButton(OreButton(context).apply { text = "设置" })
+            addButton(OreButton(context).apply { text = "账户" })
+        }
+        
+        tabsContainer.addView(topTabs)
+        rootLayout.addView(tabsContainer)
+
+        // --- 3. 主内容渲染区 (FrameLayout) ---
+        contentFrame = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f // 占据剩余空间
+            )
+        }
+        rootLayout.addView(contentFrame)
+        
+        // --- 4. 绑定导航逻辑 ---
+        topTabs.addOnTabChangeListener(object : OreTabs.OnTabChangeListener {
+            override fun onTabChanged(index: Int, button: OreButton) {
+                switchPage(index)
+            }
+        })
+
+        // 默认显示主页 (因为 addButton 时会触发激活)
+        setContentView(rootLayout)
+    }
+    
+    private fun switchPage(index: Int) {
+        contentFrame.removeAllViews()
+        when (index) {
+            0 -> contentFrame.addView(homePage)
+            1 -> contentFrame.addView(settingsPage)
+            2 -> contentFrame.addView(accountPage)
+            // 预留位置给模组或其他页面
+            else -> contentFrame.addView(homePage)
+        }
     }
 }
