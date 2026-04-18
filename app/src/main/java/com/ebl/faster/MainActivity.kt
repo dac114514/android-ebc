@@ -5,7 +5,10 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.setPadding
 import dev1503.oreui.StyleSheet
 import dev1503.oreui.widgets.OreButton
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         // 根容器：深色背景，铺满屏幕，禁止自身滚动，因为子页面各自有 ScrollView
         val rootLayout = LinearLayout(this).apply {
@@ -37,6 +41,12 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
             setBackgroundColor(0xFF1E1E1F.toInt())
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
         // --- 1. 标题栏 (可选保留，如果不想要可以删掉) ---
@@ -79,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 setPadding(0, 20, 0, 20)
             })
             addButton(OreButton(context).apply { 
-                text = "论坛"
+                text = "市场"
                 styleSheet = StyleSheet.STYLE_PANEL 
                 setCompoundDrawablesWithIntrinsicBounds(0, dev1503.oreuiforandroid.R.drawable.message, 0, 0)
                 setPadding(0, 20, 0, 20)

@@ -28,7 +28,47 @@ class HomePage(context: Context) : ScrollView(context) {
         }
 
         // --- 1. 顶部标题栏 ---
-        val titleArea = LinearLayout(context).apply {
+        val titleArea = OreCard(context).apply {
+            styleSheet = StyleSheet.STYLE_PANEL
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, 40)
+            }
+
+            val bannerImage = ImageView(context).apply {
+                setImageResource(dev1503.oreuiforandroid.R.drawable.bg)
+                scaleType = ImageView.ScaleType.CENTER_CROP
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    (120 * resources.displayMetrics.density).toInt()
+                )
+            }
+
+            val titleContainer = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(30)
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                val pageTitle = TextView(context).apply {
+                    text = "主页"
+                    setTextColor(0xFFFFFFFF.toInt())
+                    textSize = 24f
+                    paint.isFakeBoldText = true
+                }
+                addView(pageTitle)
+            }
+
+            addView(bannerImage)
+            addView(titleContainer)
+        }
+
+        // --- 2. 核心功能操作区 ---
+        val actionArea = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -37,123 +77,43 @@ class HomePage(context: Context) : ScrollView(context) {
                 setMargins(0, 0, 0, 40)
             }
         }
-        
-        val pageTitle = TextView(context).apply {
-            text = "主页"
-            setTextColor(0xFFFFFFFF.toInt())
-            textSize = 28f
-            paint.isFakeBoldText = true
-            setPadding(0, 0, 0, 10)
-        }
-        
-        val underline = android.view.View(context).apply {
-            setBackgroundColor(0xFF4CB04E.toInt())
+
+        // 启动按钮 (全宽绿色)
+        val launchButton = OreButton(context).apply {
+            text = "启动游戏"
+            styleSheet = StyleSheet.STYLE_GREEN
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (4 * resources.displayMetrics.density).toInt()
-            )
-        }
-        
-        titleArea.addView(pageTitle)
-        titleArea.addView(underline)
-
-        // --- 2. 核心功能操作区 (并排的两张方形大卡片) ---
-        val actionArea = LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                (70 * resources.displayMetrics.density).toInt()
             ).apply {
-                setMargins(0, 0, 0, 40)
+                setMargins(0, 0, 0, 20)
             }
-        }
-
-        // 卡片高度
-        val cardHeight = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 120f, resources.displayMetrics
-        ).toInt()
-
-        // 启动按钮
-        val launchCard = OreCard(context).apply {
-            styleSheet = StyleSheet.STYLE_PANEL
-            layoutParams = LinearLayout.LayoutParams(
-                0,
-                cardHeight,
-                1f
-            ).apply {
-                setMargins(0, 0, 10, 0)
-            }
-            // 内容居中
-            val innerLayout = LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-                addView(ImageView(context).apply {
-                    setImageResource(dev1503.oreuiforandroid.R.drawable.play)
-                    layoutParams = LinearLayout.LayoutParams(
-                        (36 * resources.displayMetrics.density).toInt(),
-                        (36 * resources.displayMetrics.density).toInt()
-                    ).apply { setMargins(0, 0, 0, 10) }
-                })
-                addView(TextView(context).apply {
-                    text = "启动"
-                    setTextColor(0xFFFFFFFF.toInt())
-                    textSize = 20f
-                    paint.isFakeBoldText = true
-                    gravity = Gravity.CENTER
-                })
-            }
-            addView(innerLayout)
+            setCompoundDrawablesWithIntrinsicBounds(dev1503.oreuiforandroid.R.drawable.play, 0, 0, 0)
+            setPadding(40, 0, 40, 0)
             setOnClickListener {
                 Toast.makeText(context, "正在启动游戏...", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 存档按钮
-        val fileCard = OreCard(context).apply {
+        // 存档按钮 (全宽灰色)
+        val fileButton = OreButton(context).apply {
+            text = "管理存档"
             styleSheet = StyleSheet.STYLE_PANEL
             layoutParams = LinearLayout.LayoutParams(
-                0,
-                cardHeight,
-                1f
-            ).apply {
-                setMargins(10, 0, 0, 0)
-            }
-            val innerLayout = LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-                addView(ImageView(context).apply {
-                    setImageResource(dev1503.oreuiforandroid.R.drawable.folder)
-                    layoutParams = LinearLayout.LayoutParams(
-                        (36 * resources.displayMetrics.density).toInt(),
-                        (36 * resources.displayMetrics.density).toInt()
-                    ).apply { setMargins(0, 0, 0, 10) }
-                })
-                addView(TextView(context).apply {
-                    text = "存档"
-                    setTextColor(0xFFFFFFFF.toInt())
-                    textSize = 20f
-                    paint.isFakeBoldText = true
-                    gravity = Gravity.CENTER
-                })
-            }
-            addView(innerLayout)
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (70 * resources.displayMetrics.density).toInt()
+            )
+            setCompoundDrawablesWithIntrinsicBounds(dev1503.oreuiforandroid.R.drawable.folder, 0, 0, 0)
+            setPadding(40, 0, 40, 0)
             setOnClickListener {
                 Toast.makeText(context, "打开存档目录...", Toast.LENGTH_SHORT).show()
             }
         }
 
-        actionArea.addView(launchCard)
-        actionArea.addView(fileCard)
+        actionArea.addView(launchButton)
+        actionArea.addView(fileButton)
 
-        // --- 3. 社区新闻区域 (新闻列表) ---
+        // --- 3. 社区新闻区域 ---
         val newsSectionArea = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -186,7 +146,6 @@ class HomePage(context: Context) : ScrollView(context) {
                 }
                 setPadding(30)
                 
-                // 点击事件：可进入阅读
                 setOnClickListener {
                     Toast.makeText(context, "正在打开新闻：$title", Toast.LENGTH_SHORT).show()
                 }
@@ -220,7 +179,6 @@ class HomePage(context: Context) : ScrollView(context) {
             }
         }
 
-        // 添加三条测试新闻
         newsSectionArea.addView(createNewsItem("Minecraft 1.21 大更新，快来看看！", "准备好探索无尽的世界了吗？全新版本现已发布。", "今天 10:00"))
         newsSectionArea.addView(createNewsItem("1.21 优化更新及修复", "修复了进入地图时的闪退问题，提高了主页面的加载速度。", "昨天 18:30"))
         newsSectionArea.addView(createNewsItem("皮肤与材质包管理上线", "现在你可以在模组区域内一键更换你的角色皮肤。", "2 天前"))
