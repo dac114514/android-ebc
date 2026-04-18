@@ -1,0 +1,242 @@
+{
+  LinearLayout;
+  layout_width="fill";
+  layout_height="fill";
+  orientation="vertical";
+  backgroundColor="#080808";
+  {
+    CardView;
+    visibility=8;
+    CardElevation="5dp";
+    layout_gravity="center";
+    layout_height="67dp";
+    layout_width="match_parent";
+    layout_marginBottom="10dp";
+    CardBackgroundColor="0xFFFFFEFB";
+    {
+      LinearLayout;
+      layout_height="match_parent";
+      layout_width="match_parent";
+      gravity="left|center";
+      {
+        TextView;
+        gravity="left|center";
+        text="ElevBedrockLauncher";
+        textSize="24sp";
+        layout_marginLeft="15dp";
+        textColor="0xFF433D00";
+        id="title";
+      };
+    };
+  };
+  {
+    CardView;
+    layout_width="match_parent";
+    layout_height="77dp";
+    {
+      LinearLayout;
+      layout_height="73dp";
+      layout_width="match_parent";
+      backgroundColor="#191919";
+      {
+        LinearLayout;
+        layout_width="match_parent";
+        layout_height="match_parent";
+        {
+          CircleImageView;
+          layout_height="50dp";
+          layout_gravity="left|center";
+          padding="10dp";
+          layout_width="50dp";
+          src="icon/arrow_back_100dp_4CB050_FILL0_wght400_GRAD0_opsz48.png";
+          id="finish";
+        };
+        {
+          TextView;
+          textColor="#4CB04E";
+          text="论坛设置";
+          layout_gravity="left|center";
+          layout_marginLeft="10dp";
+          textSize="27sp";
+        };
+      };
+    };
+    {
+      LinearLayout;
+      layout_width="match_parent";
+      layout_height="4dp";
+      layout_marginTop="73dp";
+      backgroundColor="#4CB04E";
+    };
+  };
+  {
+    ScrollView;
+    layout_width="match_parent";
+    layout_height="match_parent";
+    {
+      LinearLayout;
+      layout_width="match_parent";
+      layout_height="match_parent";
+      orientation="vertical";
+      {
+        LinearLayout;
+        layout_width="match_parent";
+        padding="10dp";
+        orientation="vertical";
+        layout_height="wrap_content";
+        {
+          LinearLayout;
+          gravity="left|center";
+          layout_width="match_parent";
+          layout_height="wrap_content";
+          {
+            ImageView;
+            layout_height="30dp";
+            src="icon/newspaper_100dp_4CB050_FILL0_wght400_GRAD0_opsz48.png";
+            layout_width="wrap_content";
+          };
+          {
+            TextView;
+            paddingLeft="0dp";
+            textIsSelectable=false;
+            paddingBottom="0dp";
+            padding="10dp";
+            text="论坛源";
+            focusable=false;
+            textColor="#4CB04E";
+            layout_width="match_parent";
+            layout_marginBottom="5dp";
+            textSize="21sp";
+          };
+        };
+        {
+          CardView;
+          layout_height="wrap_content";
+          layout_margin="10dp";
+          radius="10dp";
+          layout_width="match_parent";
+          layout_marginTop="5dp";
+          CardBackgroundColor="#2B2B2B";
+          {
+            LinearLayout;
+            layout_width="5dp";
+            layout_height="match_parent";
+            orientation="vertical";
+            backgroundColor="0xFF43A4F3";
+            {
+              ListView;
+            };
+          };
+          {
+            LinearLayout;
+            layout_width="match_parent";
+            layout_height="wrap_content";
+            orientation="vertical";
+            layout_marginLeft="10dp";
+            {
+              RadioGroup;
+              layout_width="match_parent";
+              layout_height="wrap_content";
+              {
+                RadioButton;
+                textColor="0xFFFFFFFF";
+                text="浮游box（fubox.fun）";
+                background="0xFFFFFFFF";
+              };
+              {
+            RadioButton;
+          text="苦力怕论坛(klpbbs.com）";
+        textColor="0xFFFFFFFF";
+    };
+    {
+  RadioButton;
+text="minebbs(minebbs.com)";
+textColor="0xFFFFFFFF";
+};
+{
+CardView;
+layout_margin="10dp";
+layout_height="43dp";
+layout_gravity="right|center";
+CardElevation="0dp";
+radius="9dp";
+layout_width="match_parent";
+layout_marginBottom="5dp";
+CardBackgroundColor="0xFF43A4F3";
+{
+LinearLayout;
+layout_width="match_parent";
+layout_height="match_parent";
+gravity="center";
+{
+TextView;
+textColor="0xFFFFFFFF";
+textIsSelectable=false;
+paddingBottom="0dp";
+text="自定义添加";
+focusable=false;
+layout_width="wrap_content";
+paddingLeft="0dp";
+textSize="15sp";
+};
+};
+};
+};
+};
+};
+{
+CardView;
+layout_height="wrap_content";
+layout_width="match_parent";
+radius="10dp";
+layout_marginTop="5dp";
+layout_margin="10dp";
+CardBackgroundColor="#2B2B2B";
+{
+LinearLayout;
+layout_height="match_parent";
+layout_width="5dp";
+orientation="vertical";
+backgroundColor="#F5DF00";
+{
+ListView;
+};
+};
+{
+LinearLayout;
+layout_width="match_parent";
+layout_height="wrap_content";
+orientation="vertical";
+layout_marginLeft="10dp";
+{
+TextView;
+paddingLeft="5dp";
+textIsSelectable=false;
+paddingBottom="0dp";
+padding="5dp";
+text="声明";
+focusable=false;
+layout_width="wrap_content";
+textColor="#F5DF00";
+textSize="21sp";
+};
+{
+TextView;
+textColor="0xFFA3A3A3";
+textIsSelectable=false;
+layout_margin="7dp";
+paddingBottom="0dp";
+text=[==[所收录论坛与本软件无关。
+本软件对论坛网站下载的资源不承担任何责任]==];
+focusable=false;
+layout_height="match_parent";
+layout_width="match_parent";
+paddingLeft="0dp";
+textSize="17sp";
+};
+};
+};
+};
+};
+};
+};

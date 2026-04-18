@@ -12,7 +12,8 @@ import dev1503.oreui.widgets.OreButton
 import dev1503.oreui.widgets.OrePanel
 import dev1503.oreui.widgets.OreTabs
 import com.ebl.faster.ui.pages.HomePage
-import com.ebl.faster.ui.pages.SettingsPage
+import com.ebl.faster.ui.pages.ServersPage
+import com.ebl.faster.ui.pages.ForumPage
 import com.ebl.faster.ui.pages.AccountPage
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,8 @@ class MainActivity : AppCompatActivity() {
     
     // 缓存页面实例，避免频繁重建
     private val homePage by lazy { HomePage(this) }
-    private val settingsPage by lazy { SettingsPage(this) }
+    private val serversPage by lazy { ServersPage(this) }
+    private val forumPage by lazy { ForumPage(this) }
     private val accountPage by lazy { AccountPage(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,67 +39,78 @@ class MainActivity : AppCompatActivity() {
             setBackgroundColor(0xFF1E1E1F.toInt())
         }
 
-        // --- 1. 标题栏 (灰偏白风格) ---
-        val titleBar = OrePanel(this).apply {
-            styleSheet = StyleSheet.STYLE_WHITE
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
+        // --- 1. 标题栏 (可选保留，如果不想要可以删掉) ---
+        // 按照 ebl 框架，标题是在各个页面的内容里，而不是全局顶部
+        // 因此这里不添加全局标题栏了
+
+        // --- 2. 主内容渲染区 (FrameLayout) ---
+        contentFrame = FrameLayout(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                0,
+                1f // 占据上方所有可用空间
             )
         }
+        rootLayout.addView(contentFrame)
 
-        val titleText = TextView(this).apply {
-            text = "EBLauncher"
-            setTextColor(0xFF000000.toInt())
-            textSize = 20f
-            paint.isFakeBoldText = true
-            gravity = Gravity.CENTER
-            setPadding(0, 25, 0, 25)
-        }
-        titleBar.addView(titleText)
-        rootLayout.addView(titleBar)
-
-        // --- 2. 顶部导航栏 (OreTabs) ---
-        val tabsContainer = LinearLayout(this).apply {
+        // --- 3. 底部导航栏 (OreTabs 作为 Bottom Navigation) ---
+        val bottomNavContainer = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(20, 20, 20, 0)
+                setMargins(0, 0, 0, 0)
             }
         }
         
-        val topTabs = OreTabs(this).apply {
-            // 添加页面导航按钮
-            addButton(OreButton(context).apply { text = "主页" })
-            addButton(OreButton(context).apply { text = "设置" })
-            addButton(OreButton(context).apply { text = "账户" })
-        }
-        
-        tabsContainer.addView(topTabs)
-        rootLayout.addView(tabsContainer)
-
-        // --- 3. 主内容渲染区 (FrameLayout) ---
-        contentFrame = FrameLayout(this).apply {
+        val bottomTabs = OreTabs(this).apply {
+            // 使用 OreButton 充当底部导航按钮，并添加 xml 图标
+            addButton(OreButton(context).apply { 
+                text = "主页"
+                styleSheet = StyleSheet.STYLE_PANEL 
+                setCompoundDrawablesWithIntrinsicBounds(0, dev1503.oreuiforandroid.R.drawable.home, 0, 0)
+                setPadding(0, 20, 0, 20)
+            })
+            addButton(OreButton(context).apply { 
+                text = "服务器"
+                styleSheet = StyleSheet.STYLE_PANEL 
+                setCompoundDrawablesWithIntrinsicBounds(0, dev1503.oreuiforandroid.R.drawable.server, 0, 0)
+                setPadding(0, 20, 0, 20)
+            })
+            addButton(OreButton(context).apply { 
+                text = "论坛"
+                styleSheet = StyleSheet.STYLE_PANEL 
+                setCompoundDrawablesWithIntrinsicBounds(0, dev1503.oreuiforandroid.R.drawable.message, 0, 0)
+                setPadding(0, 20, 0, 20)
+            })
+            addButton(OreButton(context).apply { 
+                text = "我的"
+                styleSheet = StyleSheet.STYLE_PANEL 
+                setCompoundDrawablesWithIntrinsicBounds(0, dev1503.oreuiforandroid.R.drawable.user, 0, 0)
+                setPadding(0, 20, 0, 20)
+            })
+            
+            // 为了让底部看起来更像导航栏，可以设置一些边距
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1f // 占据剩余空间
-            )
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(20, 20, 20, 20)
+            }
         }
-        rootLayout.addView(contentFrame)
+        
+        bottomNavContainer.addView(bottomTabs)
+        rootLayout.addView(bottomNavContainer)
         
         // --- 4. 绑定导航逻辑 ---
-        topTabs.addOnTabChangeListener(object : OreTabs.OnTabChangeListener {
+        bottomTabs.addOnTabChangeListener(object : OreTabs.OnTabChangeListener {
             override fun onTabChanged(index: Int, button: OreButton) {
                 switchPage(index)
             }
         })
 
-        // 默认显示主页 (因为 addButton 时会触发激活)
+        // 默认显示主页
         setContentView(rootLayout)
     }
     
@@ -105,9 +118,9 @@ class MainActivity : AppCompatActivity() {
         contentFrame.removeAllViews()
         when (index) {
             0 -> contentFrame.addView(homePage)
-            1 -> contentFrame.addView(settingsPage)
-            2 -> contentFrame.addView(accountPage)
-            // 预留位置给模组或其他页面
+            1 -> contentFrame.addView(serversPage)
+            2 -> contentFrame.addView(forumPage)
+            3 -> contentFrame.addView(accountPage)
             else -> contentFrame.addView(homePage)
         }
     }

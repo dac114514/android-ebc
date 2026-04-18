@@ -27,32 +27,9 @@ class HomePage(context: Context) : ScrollView(context) {
             }
         }
 
-        // --- Banner 海报图 ---
-        val bannerCard = OreCard(context).apply {
-            styleSheet = StyleSheet.STYLE_CARD_DARK
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, 40)
-            }
-            setPadding(8)
-        }
-
-        val bannerImage = ImageView(context).apply {
-            setImageResource(R.drawable.bg) 
-            scaleType = ImageView.ScaleType.CENTER_CROP
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (180 * resources.displayMetrics.density).toInt()
-            )
-        }
-        bannerCard.addView(bannerImage)
-
-        // --- 启动与版本信息区域 ---
-        val actionArea = LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
+        // --- 1. 顶部标题栏 ---
+        val titleArea = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -60,37 +37,123 @@ class HomePage(context: Context) : ScrollView(context) {
                 setMargins(0, 0, 0, 40)
             }
         }
-
-        val versionText = TextView(context).apply {
-            text = "版本\n1.21.0 正式版"
+        
+        val pageTitle = TextView(context).apply {
+            text = "主页"
             setTextColor(0xFFFFFFFF.toInt())
-            textSize = 15f
-            layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
-            )
+            textSize = 28f
+            paint.isFakeBoldText = true
+            setPadding(0, 0, 0, 10)
         }
-
-        val launchButton = OreButton(context).apply {
-            text = "启动游戏"
-            styleSheet = StyleSheet.STYLE_GREEN
-            
-            val minHeightPx = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 60f, resources.displayMetrics
-            ).toInt()
-            
+        
+        val underline = android.view.View(context).apply {
+            setBackgroundColor(0xFF4CB04E.toInt())
             layoutParams = LinearLayout.LayoutParams(
-                0,
-                minHeightPx,
-                2f
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (4 * resources.displayMetrics.density).toInt()
             )
         }
         
-        actionArea.addView(versionText)
-        actionArea.addView(launchButton)
+        titleArea.addView(pageTitle)
+        titleArea.addView(underline)
 
-        // --- 社区新闻区域 (新闻列表) ---
+        // --- 2. 核心功能操作区 (并排的两张方形大卡片) ---
+        val actionArea = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, 40)
+            }
+        }
+
+        // 卡片高度
+        val cardHeight = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 120f, resources.displayMetrics
+        ).toInt()
+
+        // 启动按钮
+        val launchCard = OreCard(context).apply {
+            styleSheet = StyleSheet.STYLE_PANEL
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                cardHeight,
+                1f
+            ).apply {
+                setMargins(0, 0, 10, 0)
+            }
+            // 内容居中
+            val innerLayout = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+                addView(ImageView(context).apply {
+                    setImageResource(dev1503.oreuiforandroid.R.drawable.play)
+                    layoutParams = LinearLayout.LayoutParams(
+                        (36 * resources.displayMetrics.density).toInt(),
+                        (36 * resources.displayMetrics.density).toInt()
+                    ).apply { setMargins(0, 0, 0, 10) }
+                })
+                addView(TextView(context).apply {
+                    text = "启动"
+                    setTextColor(0xFFFFFFFF.toInt())
+                    textSize = 20f
+                    paint.isFakeBoldText = true
+                    gravity = Gravity.CENTER
+                })
+            }
+            addView(innerLayout)
+            setOnClickListener {
+                Toast.makeText(context, "正在启动游戏...", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 存档按钮
+        val fileCard = OreCard(context).apply {
+            styleSheet = StyleSheet.STYLE_PANEL
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                cardHeight,
+                1f
+            ).apply {
+                setMargins(10, 0, 0, 0)
+            }
+            val innerLayout = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+                addView(ImageView(context).apply {
+                    setImageResource(dev1503.oreuiforandroid.R.drawable.folder)
+                    layoutParams = LinearLayout.LayoutParams(
+                        (36 * resources.displayMetrics.density).toInt(),
+                        (36 * resources.displayMetrics.density).toInt()
+                    ).apply { setMargins(0, 0, 0, 10) }
+                })
+                addView(TextView(context).apply {
+                    text = "存档"
+                    setTextColor(0xFFFFFFFF.toInt())
+                    textSize = 20f
+                    paint.isFakeBoldText = true
+                    gravity = Gravity.CENTER
+                })
+            }
+            addView(innerLayout)
+            setOnClickListener {
+                Toast.makeText(context, "打开存档目录...", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        actionArea.addView(launchCard)
+        actionArea.addView(fileCard)
+
+        // --- 3. 社区新闻区域 (新闻列表) ---
         val newsSectionArea = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -102,11 +165,11 @@ class HomePage(context: Context) : ScrollView(context) {
         }
 
         val newsSectionTitle = TextView(context).apply {
-            text = "社区与新闻"
+            text = "新闻资讯"
             setTextColor(0xFFFFFFFF.toInt())
-            textSize = 18f
+            textSize = 20f
             paint.isFakeBoldText = true
-            setPadding(10, 10, 10, 20)
+            setPadding(0, 10, 0, 20)
         }
         newsSectionArea.addView(newsSectionTitle)
 
@@ -158,11 +221,11 @@ class HomePage(context: Context) : ScrollView(context) {
         }
 
         // 添加三条测试新闻
-        newsSectionArea.addView(createNewsItem("欢迎来到 EBLauncher 测试版！", "这是一款采用纯 Kotlin 构建的全新启动器，极速、流畅且极具可定制性。", "今天 10:00"))
-        newsSectionArea.addView(createNewsItem("1.21 优化更新及修复", "修复了进入地图时的闪退问题，提高了主页面的加载速度，加入了全新的多页面 UI。", "昨天 18:30"))
-        newsSectionArea.addView(createNewsItem("皮肤与材质包管理上线", "现在你可以在模组区域内一键更换你的角色皮肤，并导入外部材质包文件。", "2 天前"))
+        newsSectionArea.addView(createNewsItem("Minecraft 1.21 大更新，快来看看！", "准备好探索无尽的世界了吗？全新版本现已发布。", "今天 10:00"))
+        newsSectionArea.addView(createNewsItem("1.21 优化更新及修复", "修复了进入地图时的闪退问题，提高了主页面的加载速度。", "昨天 18:30"))
+        newsSectionArea.addView(createNewsItem("皮肤与材质包管理上线", "现在你可以在模组区域内一键更换你的角色皮肤。", "2 天前"))
 
-        contentArea.addView(bannerCard)
+        contentArea.addView(titleArea)
         contentArea.addView(actionArea)
         contentArea.addView(newsSectionArea)
 
